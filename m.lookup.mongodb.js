@@ -1,5 +1,14 @@
 use("relation");
 
+//? relation
+// ?one to one =>
+// e.g one vehicle has one ownerDetails, one person has one national identity card
+// ? one to many =>
+// e.g. one person can play multiple games in sport week
+// ?many to many => one to many from both direction
+// e.g. one student can enroll in multiple courses in broadway
+// and one course has multiple students
+
 // db.owners.insertMany([
 //   { name: "Kamal", address: "Surkhet" },
 //   { name: "Laxman", address: "Lalitpur" },
@@ -13,7 +22,7 @@ use("relation");
 //   brand: "Yamaha",
 //   cc: 250,
 //   color: "blue",
-//   ownerId: ObjectId("65d5a4e3b364755dc0ff7ec3"),
+//   ownerId: ObjectId("65d618a0096bc632cceb6dc4"),
 // });
 
 //? $lookup
@@ -68,6 +77,8 @@ use("relation");
 //   },
 // ]);
 
+// db.courses.find();
+
 // db.students.insertOne({
 //   name: "Rina",
 //   address: "Kalanki",
@@ -88,25 +99,45 @@ use("relation");
 //   ],
 // });
 
-db.students.aggregate([
-  {
-    $match: {},
-  },
+// db.students.aggregate([
+//   {
+//     $match: {},
+//   },
+//   {
+//     $lookup: {
+//       from: "courses",
+//       localField: "enrolledCourseIds",
+//       foreignField: "_id",
+//       as: "courseDetails",
+//     },
+//   },
+//   {
+//     $project: {
+//       name: 1,
+//       address: 1,
+//       email: 1,
+//       "courseDetails.name": 1,
+//       "courseDetails.duration": 1,
+//     },
+//   },
+// ]);
+
+db.courses.aggregate([
+  { $match: {} },
   {
     $lookup: {
-      from: "courses",
-      localField: "enrolledCourseIds",
-      foreignField: "_id",
-      as: "courseDetails",
+      from: "students",
+      localField: "_id",
+      foreignField: "enrolledCourseIds",
+      as: "studentData",
     },
   },
   {
     $project: {
       name: 1,
-      address: 1,
-      email: 1,
-      "courseDetails.name": 1,
-      "courseDetails.duration": 1,
+      duration: 1,
+      "studentData.name": 1,
+      "studentData.email": 1,
     },
   },
 ]);

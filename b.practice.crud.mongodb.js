@@ -126,3 +126,39 @@ use("netflix");
 //! vayo.how can i delete only particular key value.
 
 // db.movie.find();
+
+//? aggregate practice............
+// db.owners.insertOne({
+//   name: "Dharmendra",
+//   address: "Lalitpur",
+//   email: "dharmendra@gmail.com",
+// });
+
+// db.car.insertOne({
+//   name: "BMW-i7",
+//   brand: "BMW",
+//   batteryCapacity: "101.7",
+//   color: "Blue",
+//   ownersId: ObjectId("65d6c38135a41ccac5453cd1"),
+// });
+
+db.car.aggregate([
+  { $match: {} },
+  {
+    $lookup: {
+      from: "owners",
+      localField: "ownersId",
+      foreignField: "_id",
+      as: "ownersDetails",
+    },
+  },
+  {
+    $project: {
+      name: 1,
+      brand: 1,
+      batteryCapacity: 1,
+      //   color: 1,
+      ownerName: { $first: "$ownersDetails.name" },
+    },
+  },
+]);

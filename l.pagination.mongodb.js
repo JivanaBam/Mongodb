@@ -1,5 +1,7 @@
 use("imdb");
 
+//? Pagination
+
 //? skip = (page-1)*limit
 
 let page = 2;
